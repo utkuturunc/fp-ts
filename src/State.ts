@@ -4,10 +4,12 @@ import { Function1, Endomorphism } from './function'
 
 export type URI = 'State'
 
-export type HKTState<S, A> = HKT<HKT<URI, S>, A>
+export type StateF<S> = HKT<URI, S>
+
+export type HKTState<S, A> = HKT<StateF<S>, A>
 
 export class State<S, A> {
-  __hkt: HKT<URI, S>
+  __hkt: StateF<S>
   __hkta: A
   constructor(private value: Function1<S, [A, S]>) {}
   run(s: S): [A, S] {
@@ -34,6 +36,18 @@ export class State<S, A> {
       return f(a).run(s1)
     })
   }
+}
+
+export function runState<S, A>(fa: HKTState<S, A>, s: S): [A, S] {
+  return (fa as State<S, A>).run(s)
+}
+
+export function evalState<S, A>(fa: HKTState<S, A>, s: S): A {
+  return (fa as State<S, A>).eval(s)
+}
+
+export function execState<S, A>(fa: HKTState<S, A>, s: S): S {
+  return (fa as State<S, A>).exec(s)
 }
 
 export function map<S, A, B>(f: Function1<A, B>, fa: HKTState<S, A>): State<S, B> {
@@ -71,6 +85,6 @@ export function gets<S, A>(f: Function1<S, A>): State<S, A> {
 // tslint:disable-next-line no-unused-expression
 ;(
   { map, of, ap, chain } as (
-    Monad<HKT<URI, any>>
+    Monad<StateF<any>>
   )
 )

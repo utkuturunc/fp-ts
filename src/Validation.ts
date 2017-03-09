@@ -1,10 +1,9 @@
-import { HKT } from './HKT'
 import { Applicative } from './Applicative'
 import { Semigroup } from './Semigroup'
-import { Either, isLeft, Left, map, of, URI } from './Either'
+import { Either, EitherF, isLeft, Left, map, of } from './Either'
 import { Function1 } from './function'
 
-export function getApplicative<L>(semigroup: Semigroup<L>): Applicative<HKT<URI, any>> {
+export function getApplicative<L>(semigroup: Semigroup<L>): Applicative<EitherF<any>> {
 
   function ap<A, B>(fab: Either<L, Function1<A, B>>, fa: Either<L, A>): Either<L, B> {
     if (isLeft(fab) && isLeft(fa)) {

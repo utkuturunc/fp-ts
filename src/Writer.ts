@@ -6,10 +6,12 @@ import { Lazy, Function1 } from './function'
 
 export type URI = 'Writer'
 
-export type HKTWriter<W, A> = HKT<HKT<URI, W>, A>
+export type WriterF<W> = HKT<URI, W>
+
+export type HKTWriter<W, A> = HKT<WriterF<W>, A>
 
 export class Writer<W, A> {
-  __hkt: HKT<URI, W>
+  __hkt: WriterF<W>
   __hkta: A
   constructor(private value: Lazy<[A, W]>) {}
   run(): [A, W] {

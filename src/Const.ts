@@ -10,10 +10,12 @@ import { identity, Function1 } from './function'
 
 export type URI = 'Const'
 
-export type HKTConst<A, B> = HKT<HKT<URI, A>, B>
+export type ConstF<A> = HKT<URI, A>
 
-export class Const<A, B> {
-  __hkt: HKT<URI, A>
+export type HKTConst<A, B> = HKT<ConstF<A>, B>
+
+export class Const<A, B> implements HKTConst<A, B> {
+  __hkt: ConstF<A>
   __hkta: B
   constructor(private value: A) {}
   map<B, C>(f: Function1<B, C>): Const<A, C> {
@@ -66,7 +68,7 @@ export function getApplicative<A>(monoid: Monoid<A>): Applicative<HKT<URI, A>> {
 // tslint:disable-next-line no-unused-expression
 ;(
   { map, contramap } as (
-    Functor<HKT<URI, any>> &
-    Contravariant<HKT<URI, any>>
+    Functor<ConstF<any>> &
+    Contravariant<ConstF<any>>
   )
 )

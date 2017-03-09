@@ -5,10 +5,12 @@ import { Monoid } from './Monoid'
 
 export type URI = 'Traced'
 
-export type HKTTraced<E, A> = HKT<HKT<URI, E>, A>
+export type TracedF<E> = HKT<URI, E>
+
+export type HKTTraced<E, A> = HKT<TracedF<E>, A>
 
 export class Traced<E, A> {
-  __hkt: HKT<URI, E>
+  __hkt: TracedF<E>
   __hkta: A
   constructor(private value: Function1<E, A>) {
   }
@@ -20,7 +22,7 @@ export class Traced<E, A> {
   }
 }
 
-export function getComonad<E>(monoid: Monoid<E>): Comonad<HKT<URI, E>> {
+export function getComonad<E>(monoid: Monoid<E>): Comonad<TracedF<E>> {
   function extend<A, B>(f: Function1<HKTTraced<E, A>, B>, ea: HKTTraced<E, A>): Traced<E, B> {
     return new Traced(
       (m1: E) => f(

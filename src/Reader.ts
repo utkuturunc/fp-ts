@@ -4,11 +4,13 @@ import { identity, Function1, Endomorphism } from './function'
 
 export type URI = 'Reader'
 
-export type HKTReader<E, A> = HKT<HKT<URI, E>, A>
+export type ReaderF<E> = HKT<URI, E>
+
+export type HKTReader<E, A> = HKT<ReaderF<E>, A>
 
 export class Reader<E, A> {
   static of = of
-  __hkt: HKT<URI, E>
+  __hkt: ReaderF<E>
   __hkta: A
   constructor(private value: Function1<E, A>) {}
   run(e: E): A {
@@ -59,6 +61,6 @@ export function local<E, A>(f: Endomorphism<E>, fa: HKTReader<E, A>): Reader<E, 
 // tslint:disable-next-line no-unused-expression
 ;(
   { map, of, ap, chain } as (
-    Monad<HKT<URI, any>>
+    Monad<ReaderF<any>>
   )
 )

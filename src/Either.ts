@@ -11,14 +11,16 @@ import { constFalse, constTrue, Function1, Function2, Predicate } from './functi
 
 export type URI = 'Either'
 
-export type HKTEither<L, A> = HKT<HKT<URI, L>, A>
+export type EitherF<L> = HKT<URI, L>
+
+export type HKTEither<L, A> = HKT<EitherF<L>, A>
 
 export type Either<L, A> = Left<L, A> | Right<L, A>
 
 export class Left<L, A> {
   static of = of
   __tag: 'Left'
-  __hkt: HKT<URI, L>
+  __hkt: EitherF<L>
   __hkta: A
   constructor(public value: L) {}
   map<B>(f: Function1<A, B>): Either<L, B> {
@@ -62,7 +64,7 @@ export class Left<L, A> {
 export class Right<L, A> {
   static of = of
   __tag: 'Right'
-  __hkt: HKT<URI, L>
+  __hkt: EitherF<L>
   __hkta: A
   constructor(public value: A) {}
   map<B>(f: Function1<A, B>): Either<L, B> {
@@ -173,11 +175,11 @@ export function fromPredicate<L, A>(predicate: Predicate<A>, l: Function1<A, L>)
 // tslint:disable-next-line no-unused-expression
 ;(
   { map, of, ap, chain, reduce, traverse, bimap, alt, extend } as (
-    Monad<HKT<URI, any>> &
-    Foldable<HKT<URI, any>> &
-    Traversable<HKT<URI, any>> &
+    Monad<EitherF<any>> &
+    Foldable<EitherF<any>> &
+    Traversable<EitherF<any>> &
     Bifunctor<URI> &
-    Alt<HKT<URI, any>> &
-    Extend<HKT<URI, any>>
+    Alt<EitherF<any>> &
+    Extend<EitherF<any>>
   )
 )
